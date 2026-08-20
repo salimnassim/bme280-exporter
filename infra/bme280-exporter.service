@@ -1,0 +1,12 @@
+[Unit]
+Description=BME280 Prometheus exporter
+After=network.target
+
+[Service]
+User=pi
+WorkingDirectory=/home/pi
+ExecStart=/home/pi/.venv/bin/uwsgi /home/pi/uwsgi.ini
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

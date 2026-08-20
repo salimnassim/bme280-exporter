@@ -1,0 +1,13 @@
+[project]
+name = "bme280-exporter"
+version = "0.1.0"
+description = "BME280 Prometheus exporter"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "adafruit-circuitpython-bme280>=2.6.32",
+    "flask>=3.1.3",
+    "prometheus-client>=0.25.0",
+    "rpi-gpio>=0.7.1; sys_platform == 'linux' and platform_machine in 'aarch64,armv6l,armv7l'",
+    "uwsgi>=2.0.31",
+]
