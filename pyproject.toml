@@ -11,3 +11,8 @@ dependencies = [
     "rpi-gpio>=0.7.1; sys_platform == 'linux' and platform_machine in 'aarch64,armv6l,armv7l'",
     "uwsgi>=2.0.31",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.3",
+]
