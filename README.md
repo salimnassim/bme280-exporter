@@ -8,6 +8,30 @@ A Prometheus exporter for the Bosch BME280 temperature, humidity, and pressure s
 - `infra/uwsgi.ini` uWSGI configuration used to run the exporter in production.
 - `infra/bme280-exporter.service` systemd unit template for running the exporter under uWSGI on a Raspberry Pi.
 
+## Wiring
+
+The BME280 is wired to the Raspberry Pi over I2C:
+
+```mermaid
+graph LR
+  subgraph BME280
+    B_VIN[VIN]
+    B_GND[GND]
+    B_SCL[SCL]
+    B_SDA[SDA]
+  end
+  subgraph "Raspberry Pi 40-pin header"
+    P_3V3["Pin 1 - 3.3V"]
+    P_SDA["Pin 3 - GPIO2 / SDA"]
+    P_SCL["Pin 5 - GPIO3 / SCL"]
+    P_GND["Pin 9 - GND"]
+  end
+  B_VIN --> P_3V3
+  B_SDA --> P_SDA
+  B_SCL --> P_SCL
+  B_GND --> P_GND
+```
+
 ## Install
 
 Requires Python >= 3.13 and uv.
@@ -18,7 +42,7 @@ cd bme280-exporter
 uv sync
 ```
 
-Enable I2C on the Pi (`raspi-config` → Interface Options → I2C) and confirm the sensor is visible at its address:
+Enable I2C on the Pi (`raspi-config` -> Interface Options -> I2C) and confirm the sensor is visible at its address:
 
 ```sh
 i2cdetect -y 1
@@ -26,7 +50,7 @@ i2cdetect -y 1
 
 ## Usage
 
-The exporter expects a BME280 on I2C address `0x76` and assumes a sea-level pressure of `1013.25` hPa for the pressure calculation — both are hardcoded in `main.py`, adjust there if your board uses `0x77` or you need calibrated readings for your altitude.
+The exporter expects a BME280 on I2C address `0x76` and assumes a sea-level pressure of `1013.25` hPa for the pressure calculation, both are hardcoded in `main.py`, adjust there if your board uses `0x77` or you need calibrated readings for your altitude.
 
 ```sh
 uv run uwsgi infra/uwsgi.ini
@@ -62,7 +86,7 @@ bme280_pressure_hpa 1001.7279274409775
 
 ## Deploy as a systemd service
 
-`infra/bme280-exporter.service` assumes the project is checked out at `/home/pi` and run as the `pi` user — adjust `WorkingDirectory`, `ExecStart`, and `User` to match your setup.
+`infra/bme280-exporter.service` assumes the project is checked out at `/home/pi` and run as the `pi` user. Adjust `WorkingDirectory`, `ExecStart`, and `User` to match your setup.
 
 ```sh
 sudo cp infra/bme280-exporter.service /etc/systemd/system/
